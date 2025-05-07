@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+                layout:decorate="~{layout/main_layout}">
+
+  <th:block layout:fragment="css">
+    <style>
+      .table-box{
+        height: 600px;
+        margin: 0 auto;
+      }
+      .table-box td:nth-child(4), td:nth-child(5){
+        text-align: right;
+      }
+      .table a{
+        text-decoration: none;
+        color: black;
+
+        &:hover{
+          color: blue;
+          font-weight: 600;
+        }
+      }
+
+    </style>
+  </th:block>
+
+  <div layout:fragment="content">
+    <!-- 여기 영역에만 코드 기입 -->
+    <main class="container">
+      <section class="contents">
+        <header class="mt-5 text-center">
+          <h3>게시판 목록</h3>
+        </header>
+        <article class="my-3 text-end">
+          <button type="button" class="btn btn-success" onclick="writeBoard();">글 등록</button>
+        </article>
+        <article class="table-box">
+          <input type="hidden" id="currentPage" th:value="${data.currentPage}">
+          <div>
+            <table class="table">
+              <colgroup>
+                <col style="width: 10%"/>
+                <col style="width: 40%"/>
+                <col style="width: 15%"/>
+                <col style="width: 10%"/>
+                <col style="width: 25%"/>
+              </colgroup>
+              <thead>
+              <tr class="table-dark text-center">
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회 수</th>
+                <th>최종 수정일</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="item : ${data.list}">
+                <td>[[${item.seq}]]</td>
+                <td>
+                  <a href="javascript:void(0);" th:onclick="|showDetail(${item.seq});|">
+                    [[${item.title}]]
+                  </a>
+                </td>
+                <td>[[${item.writer}]]</td>
+                <td>[[${item.readCount}]]</td>
+                <td>[[${#temporals.format(item.createDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center" th:utext="${data.pageHtml}">
+
+          </ul>
+        </nav>
+      </section>
+    </main>
+
+    <script>
+
+      function movePage(pageNum){
+        location.href = `/board/list?currentPage=${pageNum}`
+      }
+
+      $(document).ready(() => {
+        setActiveMenu();
+      })
+
+      const writeBoard = () => {
+        const pageNum = $('#currentPage').val();
+        location.href = `/board/form/view?currentPage=${pageNum}`;
+      }
+
+      const showDetail = (seq) => {
+        const pageNum = $('#currentPage').val();
+        location.href = `/board/detail/view?currentPage=${pageNum}&seq=${seq}`;
+      }
+    </script>
+  </div>
+
+</html>

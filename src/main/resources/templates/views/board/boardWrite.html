@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        .contents{
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+        }
+        .board-form{
+            margin-top: 10%;
+        }
+        #contents{
+            resize: none;
+            height: 180px;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+    <!-- 여기 영역에만 코드 기입 -->
+    <main class="container">
+        <section class="contents">
+            <header class="mt-5 text-center">
+                <h3>게시글 쓰기</h3>
+            </header>
+            <section class="board-form">
+                <form id="boardForm">
+                    <input type="hidden" id="currentPage" name="currentPage" th:value="${currentPage}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">제목</label>
+                        <input type="text" id="title" name="title" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="file" class="form-label">첨부파일</label>
+                        <input type="file" id="file" name="file" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contents" class="form-label">내용</label>
+                        <textarea id="contents" name="contents" class="form-control"></textarea>
+                    </div>
+                </form>
+            </section>
+            <section class="text-center mt-3">
+                <button type="button" class="btn btn-primary me-2" onclick="addBoard();" >등록</button>
+                <button type="button" class="btn btn-secondary me-2" onclick="addCancel();">취소</button>
+            </section>
+        </section>
+    </main>
+
+    <script>
+
+        function validated () {
+            const title = document.querySelector('#title');
+            const contents = document.querySelector('#contents');
+
+            if (title.value.trim().length === 0){
+                alert('제목을 입력하세요.')
+                title.focus();
+                return false;
+            }
+            if (contents.value.trim().length === 0){
+                alert('내용을 입력하세요.')
+                contents.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        const addBoard = () => {
+            if(validated()){
+                //form 가져오기
+                const form = $('#boardForm');
+                //파일객체도 전송해야하기 때문에 formData 객체 생성
+                //formData에 form 전체를 대입하여 key value 형태롤
+                //form 하위 input 들에 대한 데이터가 만들어짐
+                const formData = new FormData(form[0]);
+
+                //ajax
+                $.ajax(
+                    {
+                        url : '/board/add', //경로
+                        type : 'post',      //전송타입
+                        dataType : 'json',  //돌려받을 데이터 타입
+                        data : formData,    //전송할 데이터
+                        processData : false,//data를 queryString 으로 변경할지 여부
+                        contentType : false //파일전송할 때 off
+                    }
+                ).done((response) => {
+                    alert(response.resultMsg);
+                    if (response.resultCode === 200){
+                        location.href = '/board/list?currentPage=0'
+                    }
+                }).fail((xhr, status, error) => {
+                    console.log(error)
+                })
+            }
+        }
+
+        const addCancel = () => {
+            const currentPage = $('#currentPage').val();
+            location.href = `/board/list?currentPage=${currentPage}`;
+        }
+    </script>
+</div>
+
+</html>

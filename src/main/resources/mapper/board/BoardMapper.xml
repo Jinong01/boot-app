@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kor.it.academy.board.mapper.BoardMapper">
+
+    <resultMap id="boardDetailMap" type="boardDetail">
+        <id property="seq" column="seq" />
+        <result property="title" column="title"/>
+        <result property="contents" column="contents"/>
+        <result property="writer" column="writer"/>
+        <result property="readCount" column="read_count"/>
+        <result property="createDate" column="create_date"/>
+        <!--1 대 N 관계에서 collection 사용 -->
+        <collection property="files" ofType="boardFile">
+            <id property="seq" column="file_id"/>
+            <result property="boardSeq" column="board_seq"/>
+            <result property="fileName" column="file_name"/>
+            <result property="storedFileName" column="stored_file_name"/>
+            <result property="filePath" column="file_path"/>
+        </collection>
+    </resultMap>
+
+    <select id="getBoardTotal" resultType="int">
+        select count(*) as cnt from board
+    </select>
+
+    <select id="getBoardList" parameterType="map" resultType="boardResponse">
+        select  seq,
+                title,
+                writer,
+                read_count,
+                ifnull(update_date, create_date) as create_date
+        from board
+        order by seq desc
+        limit #{offset}, #{count}
+    </select>
+
+    <select id="getBoardDetail" parameterType="map" resultMap="boardDetailMap">
+        select  b.seq,
+                b.title,
+                b.writer,
+                b.contents,
+                b.read_count,
+                bf.seq as file_id,
+                bf.file_name,
+                bf.stored_file_name,
+                bf.file_path,
+        ifnull(b.update_date, b.create_date) as create_date
+        from board b
+        left join board_files bf on b.seq = bf.board_seq
+        where b.seq = #{seq}
+    </select>
+
+    <select id="getBoardFile" parameterType="map" resultType="boardFile">
+        select * from board_files where seq = #{seq}
+    </select>
+
+    <insert id="addBoard" parameterType="boardRequest" useGeneratedKeys="true" keyProperty="seq">
+        insert into board (title, writer, contents) values (#{title}, #{writer}, #{contents})
+    </insert>
+
+    <insert id="addFile" parameterType="boardFile">
+        insert into board_files (board_seq, file_name, stored_file_name, file_path)
+        values (#{boardSeq}, #{fileName}, #{storedFileName}, #{filePath})
+    </insert>
+</mapper>

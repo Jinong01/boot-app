@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        .contents{
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+        }
+        .board-form{
+            margin-top: 10%;
+        }
+        #contents{
+            resize: none;
+            height: 180px;
+        }
+        .attach{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        .attach li{
+            margin-left: 10px;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+    <!-- 여기 영역에만 코드 기입 -->
+    <main class="container">
+        <section class="contents">
+            <header class="mt-5 text-center">
+                <h3>게시글 보기</h3>
+            </header>
+            <section class="board-form">
+                <form id="boardForm">
+                    <input type="hidden" id="currentPage" name="currentPage" th:value="${currentPage}">
+                    <input type="hidden" id="seq" name="seq" th:value="${board.seq}">
+                    <div class="mb-3">
+                        <label class="form-label">제목</label>
+                        <span>[[${board.title}]]</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">글쓴이</label>
+                        <span>[[${board.writer}]]</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">첨부파일</label>
+                        <div th:if="${#lists.isEmpty(board.files)}">
+                            <span class="ps-3">없음</span>
+                        </div>
+                        <ul class="attach" th:unless="${#lists.isEmpty(board.files)}">
+                            <li th:each="item :${board.files}">
+                                <a href="javascript:void(0)" th:onclick="|downFile(${item.seq});|">
+                                    [[${item.fileName}]]
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">내용</label>
+                        <span>[[${board.contents}]]</span>
+                    </div>
+                </form>
+            </section>
+            <section class="text-center mt-3">
+                <button type="button" class="btn btn-primary me-2" onclick="updateBoard();" >수정</button>
+                <button type="button" class="btn btn-danger me-2" onclick="deleteBoard();" >삭제</button>
+                <button type="button" class="btn btn-secondary me-2" onclick="goList();">목록</button>
+            </section>
+        </section>
+    </main>
+
+    <script>
+
+        const updateBoard = () => {
+            const currentPage = $('#currentPage').val();
+            const seq = $('#seq').val();
+            location.href = `/board/update/view?currentPage=${currentPage}&seq=${seq}`
+        }
+
+        const deleteBoard = () => {
+            const isConfirm = confirm('정말 삭제하시겠습니까?');
+            if (isConfirm){
+
+            }
+
+        }
+
+        const goList = () => {
+            const currentPage = $('#currentPage').val();
+            location.href = `/board/list?currentPage=${currentPage}`;
+        }
+
+        const downFile = (fileId) => {
+            location.href = `/api/board/down?fileId=${fileId}`;
+        }
+
+    </script>
+</div>
+
+</html>

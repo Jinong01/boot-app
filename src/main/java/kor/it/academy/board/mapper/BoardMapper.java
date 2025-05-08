@@ -27,4 +27,16 @@ public interface BoardMapper {
     BoardData.Detail getBoardDetail(@Param("seq")int seq) throws SQLException;
 
     BoardData.BoardFiles getBoardFile(@Param("seq")int seq) throws SQLException;
+
+    //게시글 수정
+    int updateBoard(BoardData.Request request) throws SQLException;
+
+    //게시글 삭제
+    int deleteBoard(@Param("seq")int seq) throws SQLException;
+
+    //파일 삭제
+    int deleteFile(@Param("seq")int seq) throws SQLException;
+
+    //게시글 조회 수 증가
+    void updateReadCount(@Param("seq")int seq) throws SQLException;
 }

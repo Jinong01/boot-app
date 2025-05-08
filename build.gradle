@@ -73,6 +73,8 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
     implementation group: 'org.bgee.log4jdbc-log4j2', name:'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.4.5'
 }
 
 tasks.named('test') {

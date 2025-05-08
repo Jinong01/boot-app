@@ -1,6 +1,8 @@
 package kor.it.academy.board.controller;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kor.it.academy.board.service.BoardService;
 import kor.it.academy.board.vo.BoardData;
 import lombok.RequiredArgsConstructor;
@@ -52,12 +54,12 @@ public class BoardController {
 
     @GetMapping(value = "/detail/view")
     public ModelAndView getBoardDetail(@RequestParam(name = "currentPage", defaultValue = "0")int currentPage,
-                                     @RequestParam int seq) {
+                                       @RequestParam int seq, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView view = new ModelAndView();
         BoardData.Detail detail = null;
 
         try{
-            detail = boardService.getBoardDetail(seq);
+            detail = boardService.getBoardDetail(request, response, seq);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,4 +110,37 @@ public class BoardController {
         }
         return resultMap;
     }
+
+    @PostMapping("/modify")
+    @ResponseBody
+    public Map<String, Object> updateBoard(@ModelAttribute BoardData.Request request) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        try {
+            resultMap = boardService.updateBoard(request);
+        } catch (Exception e) {
+            resultMap.put("resultCode", 500);
+            resultMap.put("resultMsg", "게시글 수정 실패했습니다.");
+            e.printStackTrace();
+        }
+        return resultMap;
+    }
+
+    //{seq} : 데이터, PathVariable : 경로에 있는 값을 가져온다
+    @DeleteMapping("/{seq}")
+    @ResponseBody
+    public Map<String, Object> deleteBoard(@PathVariable("seq") int seq) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        try {
+            resultMap = boardService.deleteBoard(seq);
+        } catch (Exception e) {
+            resultMap.put("resultCode", 500);
+            resultMap.put("resultMsg", "게시글  삭제 실패했습니다.");
+            e.printStackTrace();
+        }
+
+        return resultMap;
+    }
+
 }

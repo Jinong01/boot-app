@@ -20,6 +20,7 @@
         </collection>
     </resultMap>
 
+    <!--Select-->
     <select id="getBoardTotal" resultType="int">
         select count(*) as cnt from board
     </select>
@@ -55,6 +56,7 @@
         select * from board_files where seq = #{seq}
     </select>
 
+    <!--Insert-->
     <insert id="addBoard" parameterType="boardRequest" useGeneratedKeys="true" keyProperty="seq">
         insert into board (title, writer, contents) values (#{title}, #{writer}, #{contents})
     </insert>
@@ -63,4 +65,34 @@
         insert into board_files (board_seq, file_name, stored_file_name, file_path)
         values (#{boardSeq}, #{fileName}, #{storedFileName}, #{filePath})
     </insert>
+
+    <!--Update-->
+    <update id="updateBoard" parameterType="boardRequest">
+        update board
+        <set>
+            update_date = now(),
+            <if test="title neq null and title neq ''">
+                title = #{title},
+            </if>
+            <if test="contents neq null and contents neq ''">
+                contents = #{contents},
+            </if>
+        </set>
+        where seq = #{seq}
+    </update>
+
+    <update id="updateReadCount" parameterType="map">
+        update board
+        set read_count = read_count + 1
+        where seq = #{seq}
+    </update>
+
+    <!--Delete-->
+    <delete id="deleteBoard" parameterType="map">
+        delete from board where seq = #{seq}
+    </delete>
+
+    <delete id="deleteFile" parameterType="map">
+        delete from board_files where seq = #{seq}
+    </delete>
 </mapper>

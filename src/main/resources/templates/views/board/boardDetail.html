@@ -88,7 +88,23 @@
         const deleteBoard = () => {
             const isConfirm = confirm('정말 삭제하시겠습니까?');
             if (isConfirm){
+                const seq = $('#seq').val();
 
+                $.ajax({
+                    url : `/board/${seq}`,
+                    type : 'delete',
+                    dataType : 'json'
+                }).done((res) => {
+                    if(res.resultCode === 200){
+                        alert('게시글이 삭제되었습니다.');
+                        goList();
+                    }else{
+                        alert('게시글 삭제가 실패하였습니다.')
+                        return false;
+                    }
+                }).file((xhr, status, error) => {
+                    alert(error);
+                })
             }
 
         }

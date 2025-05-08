@@ -119,7 +119,8 @@
 
         const modifyCancel = () => {
             const currentPage = $('#currentPage').val();
-            location.href = `/board/list?currentPage=${currentPage}`;
+            const seq = $('#seq').val();
+            location.href = `/board/detail/view?currentPage=${currentPage}&seq=${seq}`;
         }
     </script>
 </div>

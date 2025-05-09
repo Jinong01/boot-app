@@ -20,7 +20,13 @@
             </li>
           </ul>
           <span class="navbar-text">
-        Navbar text with an inline element
+          <span th:if="${session.userInfo!=null}">
+                <span th:text="${session.userInfo.userName}"> </span> 님 환영합니다.
+                <a href="javascript:void(0)" th:onclick="logOut()">로그아웃</a>
+            </span>
+            <span th:if="${session.userInfo==null}">
+                <a href="/login/form">로그인</a>
+            </span>
       </span>
         </div>
       </div>
@@ -28,10 +34,15 @@
 
     <script>
 
+        function logOut(){
+            location.href = "/login/out";
+        }
+
         function setActiveMenu(){
           const menuIds = ['home', 'board'];
           //사용자가 요청한 경로 가져오기
           const requestPath = location.pathname;
+          console.log(requestPath);
 
           for(let id of menuIds){
             //경로에 지정한 id 값이 있다면

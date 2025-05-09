@@ -48,10 +48,12 @@
             Login
           </li>
           <li class="mt-5">
-            <input type="text" class="form-control ip-text" id="userId" name="userId" placeholder="아이디">
+            <input type="text" class="form-control ip-text" autocomplete="off"
+                   id="userId" name="userId" placeholder="아이디" onkeydown="keyEvent(event)">
           </li>
           <li class="mt-3">
-            <input type="password" class="form-control ip-text" id="passwd" name="passwd" placeholder="비밀번호">
+            <input type="password" class="form-control ip-text" autocomplete="off"
+                   id="passwd" name="passwd" placeholder="비밀번호" onkeydown="keyEvent(event)">
           </li>
           <li class="mt-3 text-center">
             <button type="button" class="btn btn-primary" onclick="login()">로그인</button>
@@ -90,11 +92,37 @@
   const login = () => {
     if (validated()){
 
+      const dataParam = {
+        userId : $('#userId').val(),
+        passwd : $('#passwd').val()
+      }
+
+      $.ajax({
+        url : 'api/login',
+        type : 'get',
+        dataType : 'json',
+        data : dataParam
+      }).done((response) => {
+        if (response.resultCode === 200){
+          location.href = '/board/list';
+        }else{
+          alert('아이디 또는 패스워드를 확인하십시오.');
+          return false;
+        }
+      }).fail((xhr, status, error) => {
+        alert(error)
+      })
     }
   }
 
   const register = () => {
+    location.href = '/user/join';
+  }
 
+  const keyEvent = (evt) => {
+    if (evt.keyCode === 13){
+      login();
+    }
   }
 
 </script>

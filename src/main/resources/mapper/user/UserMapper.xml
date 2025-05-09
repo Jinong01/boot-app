@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.it.academy.user.mapper.UserMapper">
+
+
+    <insert id="addUser" parameterType="userRequest">
+
+        INSERT INTO user_info(user_id, user_name, passwd, user_birth, gender, mobile_number,  email, addr, addr_detail)
+        VALUES( #{userId}, #{userName}, #{passwd},
+        #{userBirth}, #{userGender}, #{mobileNumber},  #{email}, #{addr} , #{addrDetail} );
+
+    </insert>
+
+
+    <select id="getUserAuthList"  resultType="userAuth">
+        select auth_id,
+        auth_name
+        from user_auth
+        where use_yn = 'Y'
+        and del_yn ='N'
+    </select>
+
+    <insert id="addUserAuthMapping" parameterType="userAuthMapping">
+        INSERT INTO user_auth_mapping( user_id, auth_id)
+        VALUES(#{userId},  #{authId});
+    </insert>
+
+</mapper>

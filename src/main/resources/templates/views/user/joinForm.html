@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<th:block layout:fragment="css">
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+    }
+
+    .contents{
+      width: 600px;
+      margin-top: 46px;
+    }
+  </style>
+</th:block>
+<div layout:fragment="content">
+  <main class="container">
+    <header class="text-center mt-5">
+      <h2>회원가입</h2>
+    </header>
+    <section class="contents mx-auto">
+      <form>
+        <div>
+          <label for="userId" class="form-label">아이디:</label>
+        </div>
+        <div class="row mb-4">
+          <div class="col-10">
+            <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디" autocomplete="false">
+          </div>
+          <div class="col-2 text-end">
+            <button type="button" id="ConfirmBtn" class="btn btn-success">ID확인</button>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="passwd" class="form-label">패스워드:</label>
+          <input type="password"  class="form-control" id="passwd" name="passwd" placeholder="패스워드" autocomplete="false">
+        </div>
+        <div class="mb-4">
+          <label for="userName" class="form-label">이름:</label>
+          <input type="text"  class="form-control" id="userName" name="userName" placeholder="이름">
+        </div>
+        <div class="mb-4">
+          <label for="userBirth" class="form-label">생년월일:</label>
+          <input type="text"  class="form-control" id="userBirth" name="userBirth" placeholder="생년월일"  maxlength="6">
+        </div>
+        <div class="mb-4">
+          <div>
+            <label class="form-label">성별:</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="userGender" id="man" value="남자" checked>
+            <label class="form-check-label" for="man">남자</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="userGender" id="woman" value="여자">
+            <label class="form-check-label" for="woman">여자</label>
+          </div>
+        </div>
+        <div>
+          <label for="agency" class="form-label">모바일:</label>
+        </div>
+        <div class="row mb-4">
+          <div class="col-3">
+            <select class="form-select" id="agency">
+              <option value="010">010</option>
+              <option value="011">011</option>
+              <option value="016">016</option>
+              <option value="017">017</option>
+              <option value="070">070</option>
+            </select>
+          </div>
+          <div class="col">
+            <input type="number"  class="form-control" id="mobileNumber" name="mobileNumber">
+          </div>
+        </div>
+        <div>
+          <label for="mailId" class="form-label"> 메일주소:</label>
+        </div>
+        <div class="row mb-4">
+          <div class="col-4">
+            <input type="text"  class="form-control" id="mailId" name="mailId">
+          </div>
+          <div class="col-5">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">@</span>
+              <input type="text" class="form-control" id="mailAgency" name="mailAgency" readonly>
+            </div>
+          </div>
+          <div class="col-3">
+            <select class="form-select" id="agencySelect" onchange="chagneAgency(this.value)">
+              <option value="none">==선택==</option>
+              <option value="naver.com">naver.com</option>
+              <option value="daum.net">daum.net</option>
+              <option value="kakao.com">kakao.com</option>
+              <option value="gamil.com">gamil.com</option>
+              <option value="yahoo.com">yahoo.com</option>
+              <option value="nate.com">nate.com</option>
+              <option value="self">직접입력</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">권한:</label>
+          <select class="form-control" id="userAuth" name="userAuth">
+            <option th:each="item : ${authList}" th:value="${item.authId}">
+              [[ ${item.authName} ]]
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">주소:</label>
+        </div>
+        <div class="row mb-4">
+          <div class="col-9">
+            <input type="text" class="form-control" id="userAddr" name="userAddr" readonly>
+          </div>
+          <div class="col-3 text-end">
+            <button type="button" id="addrBtn" class="btn btn-warning" onclick="findAddress();">주소찾기</button>
+          </div>
+        </div>
+        <div>
+          <input type="text" class="form-control" id="userAddrDetail" name="userAddrDetail">
+        </div>
+      </form>
+      <div class="mt-4  text-center">
+        <button type="button" class="btn btn-primary me-2" onclick="register();">전송</button>
+        <button type="button" class="btn btn-secondary">취소</button>
+      </div>
+    </section>
+  </main>
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script>
+
+
+    const findAddress =() =>{
+
+      new daum.Postcode({
+        oncomplete: function(data) {
+          console.log(data);
+
+          let fullAddress = '';
+          let extraAddr = '';
+
+          //도로명 선택여부에 따라 달라짐
+          if(data.userSelectedType === 'R') {
+            fullAddress = data.roadAddress;
+          }else {
+            fullAddress = data.jibunAddress;
+          }
+
+          // 법정동 여부
+          if( $.trim(data.bname).length > 0 ) {
+            extraAddr += data.bname;
+          }
+
+          //빌딩주소가 있을 경우
+          if( $.trim(data.buildingName).length > 0 ) {
+            extraAddr += (  extraAddr.length > 0 ? ", " + data.buildingName : data.buildingName  ) ;
+          }
+
+          if(extraAddr.length  > 0) {
+            extraAddr = '(' + extraAddr + ')';
+          }
+
+          fullAddress = fullAddress + extraAddr;
+
+          //input 에 데이터 넣기
+          $('#userAddr').val(fullAddress);
+
+        }
+      }).open();
+    }
+
+
+
+    const chagneAgency =(selectedValue) =>{
+      const mailAgency = $('#mailAgency');
+
+      //초기화
+      mailAgency.prop('readOnly', true);
+      mailAgency.val('');
+
+      if(selectedValue === 'self'){
+        mailAgency.prop('readOnly', false);
+      }else if(selectedValue !== 'none') {
+        mailAgency.val(selectedValue);
+      }
+    }
+
+
+    function validated() {
+      const messages ={
+        userId : '아이디를 입력하십시오',
+        passwd : '패스워드를 입력하십시오',
+        userName : '이름을 입력하십시오',
+        userBirth : '생년월일을 입략하십시오',
+        mobileNumber : '모바일번호를 입력하십시오',
+        mailId : '메일ID를 입력하십시오',
+        mailAgency : '메일주소를 입력하십시오',
+        userAddr : '주소를 입력하십시오'
+      };
+
+      const inputEle = $('input[type="text"]:not(#userAddrDetail), input[type="password"], input[type="number"]');
+
+      let isValidted = true;
+      $.each(inputEle, (index, obj)=>{
+
+        const id = obj.id;
+        const val  = obj.value;
+        const msg = messages[id];
+
+        if($.trim(val).length === 0) {
+          console.log(id)
+          alert(msg);
+          isValidted = false;
+          return false;
+        }
+      });
+
+      return isValidted;
+    }
+
+
+    const register = () =>{
+      if( validated() ){
+
+        const email = $('#mailId').val() + '@' + $('#mailAgency').val();
+        const mobile = $('#agency').val() + $('#mobileNumber').val();
+
+        const frmData ={
+          userId : $('#userId').val(),
+          passwd : $('#passwd').val(),
+          userName :  $('#userName').val(),
+          userBirth : $('#userBirth').val(),
+          userGender :  $('input[name="userGender"]:checked').val(),
+          mobileNumber : mobile,
+          email : email,
+          addr :  $('#userAddr').val(),
+          addrDetail :  $('#userAddrDetail').val(),
+          userAuth : $('#userAuth option:checked').val()
+        };
+
+
+        $.ajax({
+          url: '/api/user/',
+          type : 'post',
+          contentType : 'application/json',
+          dataType : 'json',
+          data : JSON.stringify(frmData)
+
+        }).done((res)=>{
+          if(res.resultCode === 200) {
+            alert('회원가입이 완료되었습니다.');
+            location.href='/board/list';
+          }else {
+            alert('회원가입이 실패하였습니다.');
+            return false;
+          }
+
+        }).fail((xhr, status, error)=>{
+          alert(error);
+        })
+      }
+    }
+  </script>
+</div>
+</html>

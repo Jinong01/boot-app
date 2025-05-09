@@ -11,5 +11,16 @@
         <typeAlias type="kor.it.academy.board.vo.BoardData$Request" alias="boardRequest"/>
         <typeAlias type="kor.it.academy.board.vo.BoardData$BoardFiles" alias="boardFile"/>
         <typeAlias type="kor.it.academy.board.vo.BoardData$Detail" alias="boardDetail"/>
+
+        <typeAlias type="kor.it.academy.login.vo.LoginUser$LoginRequest" alias="loginRequest"/>
+        <typeAlias type="kor.it.academy.login.vo.LoginUser$UserInfo" alias="user"/>
+        <typeAlias type="kor.it.academy.login.vo.LoginUser$UserAuth"  alias="auth"/>
+
+
+        <typeAlias type="kor.it.academy.user.vo.User$Request" alias="userRequest"/>
+        <typeAlias type="kor.it.academy.user.vo.User$Response" alias="userResponse"/>
+        <typeAlias type="kor.it.academy.user.vo.User$UserAuth" alias="userAuth"/>
+        <typeAlias type="kor.it.academy.user.vo.User$UserAuthMapping" alias="userAuthMapping"/>
+
     </typeAliases>
 </configuration>

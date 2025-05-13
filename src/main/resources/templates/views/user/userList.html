@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<th:block layout:fragment="css">
+  <style>
+    .table-box{
+      height: 600px;
+      margin: 0 auto;
+    }
+    .table-box td:nth-child(4), td:nth-child(5){
+      text-align: right;
+    }
+    .table a{
+      text-decoration: none;
+      color: black;
+
+      &:hover{
+        color: blue;
+        font-weight: 600;
+      }
+    }
+
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+  <!-- 여기 영역에만 코드 기입 -->
+  <main class="container">
+    <section class="contents">
+      <header class="mt-5 text-center">
+        <h3>회원목록</h3>
+      </header>
+
+      <article class="my-3 text-end">
+        <button type="button" class="btn btn-secondary" onclick="deleteUser()">회원 삭제</button>
+      </article>
+
+      <article class="table-box">
+        <input type="hidden" id="currentPage" th:value="${currentPage}">
+        <div>
+          <table class="table">
+            <colgroup>
+              <col style="width: 5%"/><!--체크박스-->
+              <col style="width: 10%"/><!--아이디-->
+              <col style="width: 10%"/><!--이름-->
+              <col style="width: 10%"/><!--생년월일-->
+              <col style="width: 5%"/><!--성별-->
+              <col style="width: 20%"/><!--핸드폰번호-->
+              <col style="width: 20%"/><!--이메일-->
+              <col style="width: 10%"/><!--사용여부-->
+              <col style="width: 10%"/><!--삭제여부-->
+            </colgroup>
+            <thead>
+            <tr class="table-dark text-center">
+              <th></th>
+              <th>아이디</th>
+              <th>이름</th>
+              <th>생년월일</th>
+              <th>성별</th>
+              <th>전화번호</th>
+              <th>이메일</th>
+              <th>사용유무</th>
+              <th>삭제유무</th>
+            </tr>
+            </thead>
+            <tbody id="userBody">
+
+            </tbody>
+          </table>
+        </div>
+      </article>
+      <div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center" id="page">
+          </ul>
+        </nav>
+      </div>
+    </section>
+  </main>
+  <script>
+
+    function getUserData(){
+      const currentPage = document.querySelector('#currentPage').value;
+
+      $.ajax({
+        url : '/api/user/',
+        type : 'get',
+        dataType : 'json',
+        data : {currentPage : currentPage}
+      }).done((response) => {
+        drawUser(response);
+      }).fail((xhr, status, error) => {
+        alert(status)
+      })
+    }
+
+    function drawUser(data){
+      //화면 그리기
+      const tbody = $('#userBody');
+      const pageDiv = $('#page');
+      //초기화
+      tbody.empty();
+      pageDiv.empty();
+
+      $.each(data.userList, function (index, user){
+        const check = makeCheckbox(user.userId, 'userCheck', user.userId, '');
+        const checkTd = makeTd(check,'');
+        const link = `<a href="javascript:void(0);" onclick="showDetail('${user.userId}')">${user.userId}</a>`;
+        const idTd = makeTd(link);
+        const nameTd = makeTd(user.userName);
+        const birthTd = makeTd(user.userBirth);
+        const genderTd = makeTd(user.gender);
+        const mobileTd = makeTd(user.mobileNumber);
+        const emailTd = makeTd(user.email);
+        const useYnTd = makeTd(user.useYn == 'Y'? '사용' : '미사용');
+        const delYnTd = makeTd(user.delYn == 'Y'? '삭제' : '');
+
+        const tr = makeTr(checkTd, idTd, nameTd, birthTd, genderTd, mobileTd,emailTd, useYnTd, delYnTd);
+        tbody.append(tr);
+      });
+
+      pageDiv.append(data.pageHtml);
+    }
+
+    const movePage = (pageNum) => {
+      $('#currentPage').val(pageNum);
+      getUserData();
+    }
+
+    const showDetail = (userId) => {
+      const currentPage = $('#currentPage').val();
+      location.href = `/user/detail?currentPage=${currentPage}&userId=${userId}`
+    }
+
+    const deleteUser = () => {
+      const userCheck = $('input[name="userCheck"]:checked');
+      if (userCheck.length === 0){
+        alert('삭제할 사용자를 선택하십시오.');
+        return false;
+      }
+      const isConfirm = confirm('선택된 사용자를 삭제하시겠습니까?')
+      if (isConfirm){
+        const userList = [];
+        //삭제할 사용자 id 가져오기
+        $.each(userCheck, (index, check) => {
+          userList.push(check.value)
+        });
+
+        const dataParam = {
+          userList : userList.join('#')
+        }
+
+        //삭제 기능
+        $.ajax({
+          url : '/api/user/',
+          type : 'delete',
+          dataType : 'json',
+          data : dataParam
+        }).done((res) => {
+          if(res.resultCode === 200){
+            alert('선택된 사용자가 삭제되었습니다.');
+            getUserData();
+          }else {
+            alert('삭제가 실패하였습니다.');
+            return false;
+          }
+        }).fail((xhr, status, error) => {
+          alert(status)
+        })
+      }
+    }
+
+
+    $(document).ready(() => {
+      getUserData();
+    })
+
+  </script>
+</div>
+
+</html>

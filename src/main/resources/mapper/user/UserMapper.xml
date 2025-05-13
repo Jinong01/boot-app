@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.it.academy.user.mapper.UserMapper">
+<mapper namespace="kor.it.academy.user.mapper.UserMapper">
 
 
     <insert id="addUser" parameterType="userRequest">
 
-        INSERT INTO user_info(user_id, user_name, passwd, user_birth, gender, mobile_number,  email, addr, addr_detail)
-        VALUES( #{userId}, #{userName}, #{passwd},
-        #{userBirth}, #{userGender}, #{mobileNumber},  #{email}, #{addr} , #{addrDetail} );
+        INSERT INTO user_info(user_id, user_name, passwd, user_birth, gender, mobile_number,  email, user_addr, addr_detail)
+        VALUES( #{userId}, #{userName}, #{passwd}, #{userBirth}, #{gender}, #{mobileNumber},  #{email}, #{addr} , #{addrDetail} );
 
     </insert>
 
+    <insert id="addUserAuthMapping" parameterType="userAuthMapping">
+        INSERT INTO user_auth_mapping( user_id, auth_id)
+        VALUES(#{userId},  #{authId});
+    </insert>
 
     <select id="getUserAuthList"  resultType="userAuth">
         select auth_id,
@@ -20,9 +23,66 @@
         and del_yn ='N'
     </select>
 
-    <insert id="addUserAuthMapping" parameterType="userAuthMapping">
-        INSERT INTO user_auth_mapping( user_id, auth_id)
-        VALUES(#{userId},  #{authId});
-    </insert>
+    <select id="getUserListTotal" parameterType="map" resultType="int">
+        SELECT count(*) as cnt
+        FROM user_info u
+        JOIN  user_auth_mapping mp ON u.user_id = mp.user_id
+        JOIN  user_auth au ON  mp.auth_id = au.auth_id
+    </select>
+
+    <select id="getUserList" parameterType="map" resultType="userResponse">
+        SELECT u.user_id,
+        u.user_name,
+        u.passwd,
+        u.user_birth,
+        u.gender,
+        u.mobile_number,
+        u.email,
+        u.use_yn,
+        u.del_yn,
+        u.create_date,
+        u.update_date,
+        au.auth_id
+        FROM user_info u
+        JOIN  user_auth_mapping mp ON u.user_id = mp.user_id
+        JOIN  user_auth au ON  mp.auth_id = au.auth_id
+        order by u.create_date desc
+    </select>
+
+    <select id="getUser" parameterType="map" resultType="userResponse">
+        SELECT u.user_id,
+        u.user_name,
+        u.passwd,
+        u.user_birth,
+        u.gender,
+        u.mobile_number,
+        u.email,
+        u.user_addr as addr,
+        u.addr_detail,
+        u.use_yn,
+        u.del_yn,
+        u.create_date,
+        u.update_date,
+        au.auth_id
+        FROM user_info u
+        JOIN  user_auth_mapping mp ON u.user_id = mp.user_id
+        JOIN  user_auth au ON  mp.auth_id = au.auth_id
+        where u.user_id = #{userId}
+    </select>
+
+    <update id="deleteAuthMapping" parameterType="map">
+        update user_auth_mapping set
+        del_yn = 'Y'
+        where user_id in
+        <foreach collection="deleteUsers" separator="," open="(" close=")" item="item">#{item}</foreach>
+    </update>
+
+    <update id="deleteUser" parameterType="map">
+        update user_info set
+        del_yn = 'Y'
+        where user_id in
+        <foreach collection="deleteUsers" separator="," open="(" close=")" item="item">#{item}</foreach>
+    </update>
 
 </mapper>
+

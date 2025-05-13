@@ -5,10 +5,7 @@ import kor.it.academy.user.vo.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +25,36 @@ public class UserAPIController {
 
         try {
             resultMap = userService.addUser(userRequest);
+        } catch (Exception e) {
+            resultMap.put("resultCode", 500);
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<Map<String , Object>> getUserData(@RequestParam(defaultValue = "0") int currentPage) {
+        Map<String , Object> resultMap = new HashMap<>();
+
+        try {
+            resultMap.put("currentPage", currentPage);
+            //결과 map 재사용
+            resultMap = userService.getUserList(resultMap);
+        } catch (Exception e) {
+            resultMap.put("resultCode", 500);
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<Map<String , Object>> deleteUser(String  userList) {
+        Map<String , Object> resultMap = new HashMap<>();
+
+        try {
+            resultMap = userService.deleteUser(userList);
         } catch (Exception e) {
             resultMap.put("resultCode", 500);
             e.printStackTrace();

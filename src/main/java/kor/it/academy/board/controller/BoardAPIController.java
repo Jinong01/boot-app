@@ -3,7 +3,6 @@ package kor.it.academy.board.controller;
 import kor.it.academy.board.service.BoardService;
 import kor.it.academy.board.vo.BoardData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;

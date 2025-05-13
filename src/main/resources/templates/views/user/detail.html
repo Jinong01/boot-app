@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+<th:block layout:fragment="css">
+    <style>
+        .contents{
+            width: 550px;
+            margin: 0 auto;
+        }
+        .user-table{
+            border: 1px solid black;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .user-table tr{
+            height: 50px;
+        }
+        .user-table th, td{
+            border: 1px solid black;
+        }
+        .user-table th{
+            text-align: center;
+            color: black;
+            background-color: darkgray;
+        }
+        .user-table td{
+            padding: 5px;
+        }
+    </style>
+</th:block>
+<div layout:fragment="content">
+    <main class="container">
+        <header class="text-center mt-4">
+            <h3>회원정보</h3>
+        </header>
+        <section class="contents mt-5">
+            <input type="hidden" id="userId" name="userId" th:value="${userId}">
+            <input type="hidden" id="currentPage" name="currentPage" th:value="${currentPage}">
+            <div>
+                <table class="user-table">
+                    <colgroup>
+                        <col style="width:15%">
+                        <col style="width:35%">
+                        <col style="width:15%">
+                        <col style="width:35%">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>아이디</th>
+                            <td>[[${user.userId}]]</td>
+                            <th>이름</th>
+                            <td>[[${user.userName}]]</td>
+                        </tr>
+                        <tr>
+                            <th>생년월일</th>
+                            <td>[[${user.userBirth}]]</td>
+                            <th>성별</th>
+                            <td>[[${user.gender}]]</td>
+                        </tr>
+                        <tr>
+                            <th>전화번호</th>
+                            <td colspan="3">[[${user.mobileNumber}]]</td>
+                        </tr>
+                        <tr>
+                            <th>이메일</th>
+                            <td colspan="3">[[${user.email}]]</td>
+                        </tr>
+                        <tr>
+                            <th>주소</th>
+                            <td colspan="3">
+                                <p>[[${user.addr}]]</p>
+                                <p>[[${user.addrDetail}]]</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>등록일</th>
+                            <td>[[${#temporals.format(user.createDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                            <th>수정일</th>
+                            <td>[[${#temporals.format(user.updateDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-4">
+                <button type="button" class="btn btn-success" onclick="updateView();">수정</button>
+                <button type="button" class="btn btn-danger">삭제</button>
+                <button type="button" class="btn btn-secondary">목록</button>
+            </div>
+        </section>
+    </main>
+    <script>
+
+        const updateView = () => {
+            const currentPage = $('#currentPage').val();
+            const userId = $('#userId').val();
+            location.href = `/user/detail/view?currentPage=${currentPage}&userId=${userId}`;
+        }
+    </script>
+</div>
+
+</html>

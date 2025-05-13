@@ -24,14 +24,11 @@
     <section class="contents mx-auto">
       <form>
         <div>
-          <label for="userId" class="form-label">아이디:</label>
+          <label class="form-label">아이디:</label>
         </div>
         <div class="row mb-4">
-          <div class="col-10">
-            <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디" autocomplete="false">
-          </div>
-          <div class="col-2 text-end">
-            <button type="button" id="ConfirmBtn" class="btn btn-success">ID확인</button>
+          <div class="col-12">
+            <p class="ps-3">[[${user.userId}]]</p>
           </div>
         </div>
         <div class="mb-4">
@@ -39,69 +36,28 @@
           <input type="password"  class="form-control" id="passwd" name="passwd" placeholder="패스워드" autocomplete="false">
         </div>
         <div class="mb-4">
-          <label for="userName" class="form-label">이름:</label>
-          <input type="text"  class="form-control" id="userName" name="userName" placeholder="이름">
+          <label class="form-label">이름:</label>
+          <p class="ps-3">[[${user.userName}]]</p>
         </div>
-        <div class="mb-4">
-          <label for="userBirth" class="form-label">생년월일:</label>
-          <input type="text"  class="form-control" id="userBirth" name="userBirth" placeholder="생년월일"  maxlength="6">
-        </div>
-        <div class="mb-4">
-          <div>
-            <label class="form-label">성별:</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="man" value="남자" checked>
-            <label class="form-check-label" for="man">남자</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="woman" value="여자">
-            <label class="form-check-label" for="woman">여자</label>
-          </div>
-        </div>
+
         <div>
           <label for="agency" class="form-label">모바일:</label>
         </div>
         <div class="row mb-4">
           <div class="col-3">
             <select class="form-select" id="agency">
-              <option value="010">010</option>
-              <option value="011">011</option>
-              <option value="016">016</option>
-              <option value="017">017</option>
-              <option value="070">070</option>
+              <option value="010" th:selected="${agency == '010'}">010</option>
+              <option value="011" th:selected="${agency == '011'}">011</option>
+              <option value="016" th:selected="${agency == '016'}">016</option>
+              <option value="017" th:selected="${agency == '017'}">017</option>
+              <option value="070" th:selected="${agency == '070'}">070</option>
             </select>
           </div>
           <div class="col">
-            <input type="number"  class="form-control" id="mobileNumber" name="mobileNumber">
+            <input type="number"  class="form-control" id="mobileNumber" name="mobileNumber" th:value="${userMobile}">
           </div>
         </div>
-        <div>
-          <label for="mailId" class="form-label"> 메일주소:</label>
-        </div>
-        <div class="row mb-4">
-          <div class="col-4">
-            <input type="text"  class="form-control" id="mailId" name="mailId">
-          </div>
-          <div class="col-5">
-            <div class="input-group">
-              <span class="input-group-text" id="basic-addon1">@</span>
-              <input type="text" class="form-control" id="mailAgency" name="mailAgency" readonly>
-            </div>
-          </div>
-          <div class="col-3">
-            <select class="form-select" id="agencySelect" onchange="chagneAgency(this.value)">
-              <option value="none">==선택==</option>
-              <option value="naver.com">naver.com</option>
-              <option value="daum.net">daum.net</option>
-              <option value="kakao.com">kakao.com</option>
-              <option value="gamil.com">gamil.com</option>
-              <option value="yahoo.com">yahoo.com</option>
-              <option value="nate.com">nate.com</option>
-              <option value="self">직접입력</option>
-            </select>
-          </div>
-        </div>
+
         <div class="mb-3">
           <label class="form-label">권한:</label>
           <select class="form-control" id="userAuth" name="userAuth">
@@ -110,23 +66,24 @@
             </option>
           </select>
         </div>
+
         <div>
           <label class="form-label">주소:</label>
         </div>
         <div class="row mb-4">
           <div class="col-9">
-            <input type="text" class="form-control" id="userAddr" name="userAddr" readonly>
+            <input type="text" class="form-control" id="userAddr" name="userAddr" readonly th:value="${user.addr}">
           </div>
           <div class="col-3 text-end">
             <button type="button" id="addrBtn" class="btn btn-warning" onclick="findAddress();">주소찾기</button>
           </div>
         </div>
         <div>
-          <input type="text" class="form-control" id="userAddrDetail" name="userAddrDetail">
+          <input type="text" class="form-control" id="userAddrDetail" name="userAddrDetail" th:value="${user.addrDetail}">
         </div>
       </form>
       <div class="mt-4  text-center">
-        <button type="button" class="btn btn-primary me-2" onclick="register();">전송</button>
+        <button type="button" class="btn btn-primary me-2" onclick="register();">수정</button>
         <button type="button" class="btn btn-secondary">취소</button>
       </div>
     </section>
@@ -193,13 +150,8 @@
 
     function validated() {
       const messages ={
-        userId : '아이디를 입력하십시오',
         passwd : '패스워드를 입력하십시오',
-        userName : '이름을 입력하십시오',
-        userBirth : '생년월일을 입략하십시오',
         mobileNumber : '모바일번호를 입력하십시오',
-        mailId : '메일ID를 입력하십시오',
-        mailAgency : '메일주소를 입력하십시오',
         userAddr : '주소를 입력하십시오'
       };
 
@@ -227,36 +179,31 @@
     const register = () =>{
       if( validated() ){
 
-        const email = $('#mailId').val() + '@' + $('#mailAgency').val();
         const mobile = $('#agency').val() + $('#mobileNumber').val();
 
         const frmData ={
-          userId : $('#userId').val(),
           passwd : $('#passwd').val(),
-          userName :  $('#userName').val(),
-          userBirth : $('#userBirth').val(),
-          gender :  $('input[name="gender"]:checked').val(),
           mobileNumber : mobile,
-          email : email,
           addr :  $('#userAddr').val(),
           addrDetail :  $('#userAddrDetail').val(),
           userAuth : $('#userAuth option:checked').val()
         };
 
+        const userId = $('#userId').val();
 
         $.ajax({
-          url: '/api/user/',
-          type : 'post',
+          url: `/api/user/${userId}`,
+          type : 'put',
           contentType : 'application/json',
           dataType : 'json',
           data : JSON.stringify(frmData)
 
         }).done((res)=>{
           if(res.resultCode === 200) {
-            alert('회원가입이 완료되었습니다.');
+            alert('회원수정이 완료되었습니다.');
             location.href='/user/list';
           }else {
-            alert('회원가입이 실패하였습니다.');
+            alert('회원수정이 실패하였습니다.');
             return false;
           }
 

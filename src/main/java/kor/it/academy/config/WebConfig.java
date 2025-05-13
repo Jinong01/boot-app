@@ -2,6 +2,7 @@ package kor.it.academy.config;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.MultipartConfigElement;
+import kor.it.academy.config.interceptor.LoginInterceptor;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +11,19 @@ import org.springframework.util.unit.DataUnit;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoginInterceptor())
+                .addPathPatterns("/board/**")
+                .excludePathPatterns("/board/detail/view")
+                .excludePathPatterns("/board/list");
+    }
 
     @Bean
     public Filter characterEncodingFilter(){

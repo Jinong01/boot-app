@@ -71,22 +71,19 @@
   function validated(){
     const userId = document.querySelector('#userId');
     const passwd = document.querySelector('#passwd');
-    let isValidated = true;
 
     if (userId.value.trim().length === 0){
       userId.focus();
       alert('아이디를 입력하세요.');
-      isValidated = false;
-      return isValidated;
+      return false;
     }
     if (passwd.value.trim().length === 0){
       passwd.focus();
       alert('비밀번호를 입력하세요.');
-      isValidated = false;
-      return isValidated;
+      return false;
     }
 
-    return isValidated;
+    return true;
   }
 
   const login = () => {
@@ -98,7 +95,7 @@
       }
 
       $.ajax({
-        url : 'api/login',
+        url : '/api/login',
         type : 'get',
         dataType : 'json',
         data : dataParam

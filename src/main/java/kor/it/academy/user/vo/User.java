@@ -3,6 +3,7 @@ package kor.it.academy.user.vo;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class User {
 
@@ -13,7 +14,7 @@ public class User {
         private String passwd;
         private String userName;
         private String userBirth;
-        private String userGender;
+        private String gender;
         private String mobileNumber;
         private String email;
         private String addr;
@@ -48,4 +49,5 @@ public class User {
         private String userId;
         private String authId;
     }
+
 }

@@ -83,9 +83,35 @@ public class UserService {
         Map<String, Object> resultMap = new HashMap<>();
         String[] deleteUsers = userList.split("#");
 
-        int resultCode = userMapper.deleteUser(deleteUsers);
-        if(resultCode < 1) {
+        int result = userMapper.deleteUser(deleteUsers);
+        if(result < 1) {
             throw new Exception("사용자 삭제 실패");
+        }
+
+        resultMap.put("resultCode", 200);
+        return resultMap;
+    }
+
+    @Transactional
+    public Map<String, Object> updateUser(User.Request userRequest) throws Exception{
+        Map<String, Object> resultMap = new HashMap<>();
+
+        //기존 유저부르기
+        User.Response user = userMapper.getUser(userRequest.getUserId());
+
+        //비밀번호가 변경되지 않았으면 기존 꺼 사용
+        if(userRequest.getPasswd() == null && userRequest.getPasswd().isBlank()) {
+            userRequest.setPasswd(passwordEncoder.encode(user.getPasswd()));
+        } else {
+            //변경되었으면 새로운걸 인코딩해서 변경
+            userRequest.setPasswd(passwordEncoder.encode(userRequest.getPasswd()));
+        }
+
+        //사용자 정보 수정
+        int resultCode = userMapper.updateUser(userRequest);
+        resultCode += userMapper.updateUserAuth(userRequest);
+        if (resultCode < 2) {
+            throw new Exception("회원 정보 수정 실패");
         }
 
         resultMap.put("resultCode", 200);

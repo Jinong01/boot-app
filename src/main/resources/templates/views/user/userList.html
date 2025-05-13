@@ -111,11 +111,11 @@
         const idTd = makeTd(link);
         const nameTd = makeTd(user.userName);
         const birthTd = makeTd(user.userBirth);
-        const genderTd = makeTd(user.gender);
+        const genderTd = makeTd(user.gender, 'text-center');
         const mobileTd = makeTd(user.mobileNumber);
         const emailTd = makeTd(user.email);
-        const useYnTd = makeTd(user.useYn == 'Y'? '사용' : '미사용');
-        const delYnTd = makeTd(user.delYn == 'Y'? '삭제' : '');
+        const useYnTd = makeTd(user.useYn == 'Y'? '사용' : '미사용', 'text-center');
+        const delYnTd = makeTd(user.delYn == 'Y'? '삭제' : '', 'text-center');
 
         const tr = makeTr(checkTd, idTd, nameTd, birthTd, genderTd, mobileTd,emailTd, useYnTd, delYnTd);
         tbody.append(tr);

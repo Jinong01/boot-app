@@ -21,8 +21,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/board/**")
+                .addPathPatterns("/user/**")
                 .excludePathPatterns("/board/detail/view")
-                .excludePathPatterns("/board/list");
+                .excludePathPatterns("/board/list")
+                .excludePathPatterns("/user/join");
     }
 
     @Bean

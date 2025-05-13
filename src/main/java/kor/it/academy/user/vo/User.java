@@ -27,6 +27,7 @@ public class User {
 
         private String useYn;
         private String delYn;
+        private List<UserAuth> authList;
         LocalDateTime createDate;
         LocalDateTime updateDate;
     }

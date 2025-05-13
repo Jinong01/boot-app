@@ -28,13 +28,18 @@ public class LoginService {
             throw new Exception("로그인 실패");
         }
 
+        //가지고 있는 권한 중 anyMatch(아무거나) ADMIN 이면
+        boolean isAuth = user.getAuthList().stream().anyMatch(auth -> auth.getAuthId().equals("ADMIN"));
+
         //패스워드 숨기기
         LoginUser.UserInfo logined =
                 LoginUser.UserInfo.builder()
                         .userId(user.getUserId())
                         .userName(user.getUserName())
                         .authList(user.getAuthList())
+                        .isAuth(isAuth)
                         .build();
+
         //세션 저장
         session.setAttribute("userInfo", logined);
         session.setMaxInactiveInterval(1800);

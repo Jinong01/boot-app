@@ -5,6 +5,7 @@
     <resultMap id="userMap" type="user">
         <id property="userId" column="user_id" />
         <result property="userName" column="user_name"/>
+        <result property="passwd" column="passwd"/>
         <!-- 권한 리스트 -->
         <collection property="authList" ofType="auth">
             <id property="authId" column="auth_id"/>
@@ -13,7 +14,7 @@
     </resultMap>
 
 
-    <select id="login" parameterType="loginRequest" resultType="user">
+    <select id="login" parameterType="loginRequest" resultMap="userMap">
         SELECT u.user_id,
         u.user_name,
         u.passwd,

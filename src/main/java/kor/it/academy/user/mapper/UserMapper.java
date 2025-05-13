@@ -26,10 +26,14 @@ public interface UserMapper {
     List<User.Response> getUserList(Map<String , Object> param) throws SQLException;
 
     //권한매핑 삭제
-    int deleteUserAuthMapping(@Param("deleteUsers")String[] deleteUsers) throws SQLException;
+    int deleteAuthMapping(@Param("deleteUsers")String[] deleteUsers) throws SQLException;
 
     //사용자 삭제
     int deleteUser (@Param("deleteUsers")String[] deleteUsers) throws SQLException;
 
     User.Response getUser(@Param("userId") String userId) throws SQLException;
+
+    int updateUser(User.Request userRequest) throws SQLException;
+
+    int updateUserAuth(User.Request userRequest) throws SQLException;
 }

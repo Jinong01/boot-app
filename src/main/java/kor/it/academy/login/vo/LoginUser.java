@@ -18,6 +18,7 @@ public class LoginUser {
         private String userName;
         private String passwd;
         private List<UserAuth> authList;
+        private boolean isAuth;
     }
 
     @Builder@Getter@NoArgsConstructor@AllArgsConstructor

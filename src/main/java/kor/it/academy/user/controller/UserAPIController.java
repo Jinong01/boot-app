@@ -62,4 +62,20 @@ public class UserAPIController {
 
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<Map<String,Object>> updateUser(@PathVariable(name = "userId") String userId,
+                                                         @RequestBody User.Request userRequest) {
+        Map<String,Object> resultMap = new HashMap<>();
+
+        try {
+            userRequest.setUserId(userId);
+            resultMap = userService.updateUser(userRequest);
+        } catch (Exception e) {
+            resultMap.put("resultCode", 500);
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
 }

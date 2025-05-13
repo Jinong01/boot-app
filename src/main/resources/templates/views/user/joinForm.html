@@ -198,14 +198,14 @@
         userName : '이름을 입력하십시오',
         userBirth : '생년월일을 입략하십시오',
         mobileNumber : '모바일번호를 입력하십시오',
-        mailId : '메일ID를 입력하십시오',
+        mailId : '메일 ID를 입력하십시오',
         mailAgency : '메일주소를 입력하십시오',
         userAddr : '주소를 입력하십시오'
       };
 
       const inputEle = $('input[type="text"]:not(#userAddrDetail), input[type="password"], input[type="number"]');
 
-      let isValidted = true;
+      let isValidated = true;
       $.each(inputEle, (index, obj)=>{
 
         const id = obj.id;
@@ -215,12 +215,12 @@
         if($.trim(val).length === 0) {
           console.log(id)
           alert(msg);
-          isValidted = false;
+          isValidated = false;
           return false;
         }
       });
 
-      return isValidted;
+      return isValidated;
     }
 
 

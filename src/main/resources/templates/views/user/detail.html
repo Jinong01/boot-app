@@ -85,8 +85,8 @@
             </div>
             <div class="text-center mt-4">
                 <button type="button" class="btn btn-success" onclick="updateView();">수정</button>
-                <button type="button" class="btn btn-danger">삭제</button>
-                <button type="button" class="btn btn-secondary">목록</button>
+                <button type="button" class="btn btn-danger" onclick="deleteUser()">삭제</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/user/list'">목록</button>
             </div>
         </section>
     </main>
@@ -96,6 +96,39 @@
             const currentPage = $('#currentPage').val();
             const userId = $('#userId').val();
             location.href = `/user/detail/view?currentPage=${currentPage}&userId=${userId}`;
+        }
+
+        const deleteUser = () => {
+            const userId = $('#userId').val();
+
+            const isConfirm = confirm('선택된 사용자를 삭제하시겠습니까?')
+            if (isConfirm){
+                const userList = [];
+                //삭제할 사용자 id 가져오기
+                userList.push(userId)
+
+                const dataParam = {
+                    userList : userList.join('#')
+                }
+
+                //삭제 기능
+                $.ajax({
+                    url : '/api/user/',
+                    type : 'delete',
+                    dataType : 'json',
+                    data : dataParam
+                }).done((res) => {
+                    if(res.resultCode === 200){
+                        alert('선택된 사용자가 삭제되었습니다.');
+                        getUserData();
+                    }else {
+                        alert('삭제가 실패하였습니다.');
+                        return false;
+                    }
+                }).fail((xhr, status, error) => {
+                    alert(status)
+                })
+            }
         }
     </script>
 </div>

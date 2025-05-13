@@ -150,6 +150,7 @@ public class BoardService {
     }
 
     //게시글 삭제
+    @Transactional
     public Map<String, Object> deleteBoard(int seq) throws SQLException{
         Map<String, Object> resultMap = new HashMap<>();
         //기존 게시글 호출

@@ -22,6 +22,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PagingVo pagingVo;
 
+    @Transactional
     public Map<String , Object> addUser(User.Request userRequest) throws Exception{
         Map<String , Object> result = new HashMap<>();
 

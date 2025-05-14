@@ -1,3 +1,5 @@
+<!--Security로 변경 전-->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
@@ -43,27 +45,23 @@
   <main class="container">
     <div class="login-contents">
       <div class="login-box">
-        <!--Security가 /login/proc 를 사용하고 post 방식만 받는다, return 값이 false면 form 데이터를 넘기지 않는다-->
-        <form action="/login/proc" method="post" onsubmit="return validated()">
-          <ul class="login-item">
-            <li class="header">
-              Login
-            </li>
-            <li class="mt-5">
-              <input type="text" class="form-control ip-text" autocomplete="off"
-                     id="username" name="username" placeholder="아이디">
-                      <!--username과 password로 파라미터 설정이 되어있으므로 바꿔야한다-->
-            </li>
-            <li class="mt-3">
-              <input type="password" class="form-control ip-text" autocomplete="off"
-                     id="password" name="password" placeholder="비밀번호">
-            </li>
-            <li class="mt-3 text-center">
-              <button type="submit" class="btn btn-primary">로그인</button>
-              <button type="button" class="btn btn-success ms-2" onclick="register()">회원가입</button>
-            </li>
-          </ul>
-        </form>
+        <ul class="login-item">
+          <li class="header">
+            Login
+          </li>
+          <li class="mt-5">
+            <input type="text" class="form-control ip-text" autocomplete="off"
+                   id="userId" name="userId" placeholder="아이디" onkeydown="keyEvent(event)">
+          </li>
+          <li class="mt-3">
+            <input type="password" class="form-control ip-text" autocomplete="off"
+                   id="passwd" name="passwd" placeholder="비밀번호" onkeydown="keyEvent(event)">
+          </li>
+          <li class="mt-3 text-center">
+            <button type="button" class="btn btn-primary" onclick="login()">로그인</button>
+            <button type="button" class="btn btn-success ms-2" onclick="register()">회원가입</button>
+          </li>
+        </ul>
       </div>
     </div>
   </main>
@@ -73,8 +71,8 @@
 <script>
 
   function validated(){
-    const userId = document.querySelector('#username');
-    const passwd = document.querySelector('#password');
+    const userId = document.querySelector('#userId');
+    const passwd = document.querySelector('#passwd');
 
     if (userId.value.trim().length === 0){
       userId.focus();
@@ -90,8 +88,40 @@
     return true;
   }
 
+  const login = () => {
+    if (validated()){
+
+      const dataParam = {
+        userId : $('#userId').val(),
+        passwd : $('#passwd').val()
+      }
+
+      $.ajax({
+        url : '/api/login',
+        type : 'get',
+        dataType : 'json',
+        data : dataParam
+      }).done((response) => {
+        if (response.resultCode === 200){
+          location.href = '/board/list';
+        }else{
+          alert('아이디 또는 패스워드를 확인하십시오.');
+          return false;
+        }
+      }).fail((xhr, status, error) => {
+        alert(error)
+      })
+    }
+  }
+
   const register = () => {
     location.href = '/user/join';
+  }
+
+  const keyEvent = (evt) => {
+    if (evt.keyCode === 13){
+      login();
+    }
   }
 
 </script>

@@ -3,6 +3,7 @@ package kor.it.academy.config.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import kor.it.academy.login.vo.LoginUser;
 import org.json.JSONObject;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -27,6 +28,7 @@ public class LoginInterceptor  implements HandlerInterceptor {
             }
             isLogin = false;
         }
+
         return isLogin;
     }
 

@@ -2,6 +2,7 @@ package kor.it.academy.config;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.http.HttpSession;
 import kor.it.academy.config.interceptor.LoginInterceptor;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -17,14 +18,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private final HttpSession httpSession;
+
+    public WebConfig(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/board/**")
-                .addPathPatterns("/user/**")
                 .excludePathPatterns("/board/detail/view")
-                .excludePathPatterns("/board/list")
-                .excludePathPatterns("/user/join");
+                .excludePathPatterns("/board/list");
     }
 
     @Bean

@@ -31,4 +31,11 @@ public class LoginController {
         view.setViewName("redirect:/login/form");
         return view;
     }
+
+    @GetMapping("/error")
+    public ModelAndView error() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("views/login/error");
+        return view;
+    }
 }

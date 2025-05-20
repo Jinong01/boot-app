@@ -3,6 +3,7 @@ package kor.it.academy.board.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kor.it.academy.board.service.BoardJPAService;
 import kor.it.academy.board.service.BoardService;
 import kor.it.academy.board.vo.BoardData;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardJPAService boardJPAService;
     private final RequestToViewNameTranslator viewNameTranslator;
 
 //    @RequestMapping(value = "/board/list", method = RequestMethod.GET)
@@ -39,6 +41,29 @@ public class BoardController {
             e.printStackTrace();
         }
         view.addObject("data", resultData);
+        view.setViewName("views/board/boardList");
+        return view;
+    }
+
+
+    @GetMapping(value = "/search")
+    public ModelAndView getBoardList(
+            @RequestParam(name="searchType")String searchType,
+            @RequestParam(name="searchText", defaultValue = "")String searchText,
+            @RequestParam(name="currentPage", defaultValue = "0")int currentPage){
+        ModelAndView view = new ModelAndView();
+
+        Map<String ,Object> resultData = null;
+        try{
+            resultData = boardJPAService.searchBoardList(currentPage, searchType, searchText);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        view.addObject("data", resultData);
+        view.addObject("searchType", searchType);
+        view.addObject("searchText", searchText);
+        view.addObject("currentPage", currentPage);
         view.setViewName("views/board/boardList");
         return view;
     }
@@ -142,5 +167,4 @@ public class BoardController {
 
         return resultMap;
     }
-
 }

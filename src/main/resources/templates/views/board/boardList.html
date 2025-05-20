@@ -21,7 +21,26 @@
           font-weight: 600;
         }
       }
-
+      .b-search{
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .left{
+        flex: 3;
+      }
+      .right{
+        flex: 1;
+      }
+      .sch-select{
+        height: 34px;
+        width : 120px;
+        border-radius: 10px;
+      }
+      .sch-input{
+        height: 34px;
+        width: 170px;
+        border-radius: 10px;
+      }
     </style>
   </th:block>
 
@@ -32,8 +51,19 @@
         <header class="mt-5 text-center">
           <h3>게시판 목록</h3>
         </header>
-        <article class="my-3 text-end">
-          <button type="button" class="btn btn-success" onclick="writeBoard();">글 등록</button>
+        <article class="my-3 b-search">
+          <div class="left">
+            <select class="sch-select" id="searchType" name="searchType">
+              <option th:selected="${searchType != null and searchType == 'all'}" value="all">전체</option>
+              <option th:selected="${searchType != null and searchType == 'title'}" value="title">제목</option>
+              <option th:selected="${searchType != null and searchType == 'writer'}" value="writer">작성자</option>
+            </select>
+            <input type="text" class="sch-input" id="searchText" name="searchText" th:value="${searchText != null ? searchText : ''}">
+            <button type="button" class="btn btn-warning" onclick="searchBoard()">검색</button>
+          </div>
+          <div class="right text-end">
+            <button type="button" class="btn btn-success" onclick="writeBoard();">글 등록</button>
+          </div>
         </article>
         <article class="table-box">
           <input type="hidden" id="currentPage" th:value="${data.currentPage}">
@@ -80,13 +110,23 @@
     </main>
 
     <script>
+      const searchParam = () => {
+        searchType : ''
+        searchText : ''
+      }
 
       function movePage(pageNum){
-        location.href = `/board/list?currentPage=${pageNum}`
+        if(searchParam.searchText.trim().length > 0){
+          //검색어가 없으면 그냥 all 출력
+          location.href = `/board/search?searchType=${searchParam.searchType}&searchText=${searchParam.searchText}&currentPage=${pageNum}`
+        }else {
+          location.href = `/board/list?currentPage=${pageNum}`
+        }
       }
 
       $(document).ready(() => {
         setActiveMenu();
+        initSearchParam();
       })
 
       const writeBoard = () => {
@@ -98,6 +138,19 @@
         const pageNum = $('#currentPage').val();
         location.href = `/board/detail/view?currentPage=${pageNum}&seq=${seq}`;
       }
+
+      const searchBoard = () => {
+        //파라미터 만들기
+        initSearchParam();
+        //검색어가 없으면 그냥 all 출력
+        location.href = `/board/search?searchType=${searchParam.searchType}&searchText=${searchParam.searchText}`
+      }
+
+      function initSearchParam(){
+        searchParam.searchType  = $('#searchType option:selected').val();
+        searchParam.searchText  = $('#searchText');
+      }
+
     </script>
   </div>
 

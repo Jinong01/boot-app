@@ -26,6 +26,26 @@ spring :
         prepStmtCacheSqlLimit: 2048 #sql문서 최대 길이
         useServerPrepStmts: true #최신버전 지원설정
 
+  jpa:
+    database: mysql
+    generate-ddl: false #ddl 안쓴다
+    open-in-view: false #지연로딩 관련 설정
+    show-sql: true    #sql 출력
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        generate_statistics: false
+        format_sql: true
+        use_sql_comments: true
+        highlight_sql: true
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+          region.factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+        connection:
+          autocommit: false # Spring JPA가 트랜잭션을 관리하는 방식에 맞춰 자동 커밋이 비활성화되고, 트랜잭션을 명시적으로 시작하고 커밋하거나 롤백할 수 있음.
+
   thymeleaf:
     cache: false
     check-template-location: true

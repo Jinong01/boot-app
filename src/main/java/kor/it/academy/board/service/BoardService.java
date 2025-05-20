@@ -48,6 +48,7 @@ public class BoardService {
                 .pageHtml(pagingVo.pageHtml()).build();
     }
 
+
     //게시글 개별 조회
     public BoardData.Detail getBoardDetail(HttpServletRequest request, HttpServletResponse response, Integer seq) throws SQLException{
         if (!CookieUtils.checkCookie(request, seq.toString())){

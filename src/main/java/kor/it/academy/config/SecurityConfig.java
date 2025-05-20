@@ -45,6 +45,7 @@ public class SecurityConfig {
                                 request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //오픈API에 OPTIONS 방식인것들이 있어서 허용
                                         .requestMatchers("/login/**").permitAll()
                                         .requestMatchers("/board/list").permitAll()
+                                        .requestMatchers("/board/search").permitAll()
                                         .requestMatchers("/user/join").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/api/user/").permitAll()
                                         .requestMatchers("/user/**").hasRole("ADMIN")

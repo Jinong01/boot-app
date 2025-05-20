@@ -24,14 +24,14 @@ public class WebConfig implements WebMvcConfigurer {
         this.httpSession = httpSession;
     }
 
-    @Override
+/*    @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/board/**")
                 .excludePathPatterns("/board/detail/view")
                 .excludePathPatterns("/board/list");
-    }
+    }*/
 
     @Bean
     public Filter characterEncodingFilter(){

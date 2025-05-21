@@ -5,7 +5,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import kor.it.academy.board.entity.BoardEntity;
-import kor.it.academy.board.entity.BoardFileEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

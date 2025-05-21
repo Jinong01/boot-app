@@ -27,13 +27,13 @@ public class BoardEntity {
     @Column(name = "contents", nullable = false)
     private String contents;
 
-    @Column(name = "read_count")
+    @Column(name = "read_count", insertable = false)
     private Integer readCount;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date", insertable = false, updatable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "update_date")
+    @Column(name = "update_date", insertable = false)
     private LocalDateTime updateDate;
 
     @OneToMany(mappedBy = "board")

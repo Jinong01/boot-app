@@ -69,9 +69,12 @@
                     </div>
                 </form>
             </section>
-            <section class="text-center mt-3">
+            <section class="text-center mt-3" th:if="${ (session.userInfo.userName eq board.writer) or session.userInfo.isAuth}">
                 <button type="button" class="btn btn-primary me-2" onclick="updateBoard();" >수정</button>
                 <button type="button" class="btn btn-danger me-2" onclick="deleteBoard();" >삭제</button>
+                <button type="button" class="btn btn-secondary me-2" onclick="goList();">목록</button>
+            </section>
+            <section class="text-center mt-3" th:if="${ (session.userInfo.userName ne board.writer) and !session.userInfo.isAuth}">
                 <button type="button" class="btn btn-secondary me-2" onclick="goList();">목록</button>
             </section>
         </section>

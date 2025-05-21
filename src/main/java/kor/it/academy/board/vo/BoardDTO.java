@@ -17,7 +17,7 @@ public class BoardDTO {
     private Integer readCount;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
-    private Set<BoardFileDTO> boardFiles = new LinkedHashSet<>();
+    private Set<BoardFileDTO> files = new LinkedHashSet<>();
 
     public static BoardDTO of(BoardEntity entity){
         Set<BoardFileDTO> boardFiles =
@@ -32,7 +32,7 @@ public class BoardDTO {
                 .readCount(entity.getReadCount())
                 .createDate(entity.getCreateDate())
                 .updateDate(entity.getUpdateDate())
-                .boardFiles(boardFiles).build();
+                .files(boardFiles).build();
     }
 
 }

@@ -48,10 +48,19 @@ public class CookieUtils {
      */
     public static void updateCookie(HttpServletRequest request, HttpServletResponse response, String id) {
         Optional<Cookie> cookieOpt = getCookie(request, "boardIds");
-        if (cookieOpt.isEmpty() || !cookieOpt.get().getValue().contains(id)) {
+
+        boolean isRead = false;
+
+        if (!cookieOpt.isEmpty()) {
+            isRead = Arrays.stream(cookieOpt.get().getValue().split("#"))
+                    .anyMatch(id::equals);
+        }
+
+        if (!isRead) {
             String ids = cookieOpt.map(Cookie-> Cookie.getValue() + "#" + id).orElse(id); // orElse(id) => container 가 비어있으면 id를 반환해라
             addCookie(response, "boardIds", ids);
         }
+
     }
 
     /**
@@ -62,7 +71,9 @@ public class CookieUtils {
      */
     public static boolean checkCookie(HttpServletRequest request, String id) {
         return getCookie(request, "boardIds")
-                .map(cookie -> cookie.getValue().contains(id))
-                .orElse(false);
+                .map(cookie -> cookie.getValue().split("#"))
+                .map(arr -> {
+                    return Arrays.stream(arr).anyMatch(id::equals);
+                }).orElse(false);
     }
 }

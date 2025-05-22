@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+<th:block layout:fragment="css">
+    <style>
+        .weather-contents {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle, #e0f7fa, #ccefff); /* 방사형 그라데이션 적용 */
+        }
+
+        .weather-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .weather-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .weather-icon {
+            font-size: 4em;
+            color: #ff9800;
+            margin-bottom: 25px;
+        }
+
+        .temperature {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ff6d00;
+            margin-bottom: 10px;
+        }
+
+        .weather-description {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .location {
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</th:block>
+<div layout:fragment="content">
+    <div class="weather-contents">
+        <div class="weather-card">
+            <div class="weather-title">오늘의 날씨</div>
+            <div class="weather-icon"><img th:src="${icon}"></div>
+            <div class="temperature"><p th:text="|${temp} ℃|"></p></div>
+            <div class="weather-description"><p th:text="${condition}"></p></div>
+            <div class="location">서울, 대한민국</div>
+        </div>
+    </div>
+</div>
+</html>

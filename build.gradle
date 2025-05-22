@@ -81,6 +81,10 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-security:3.4.5'
     implementation 'org.json:json:20250107'
+
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.4'
+    implementation 'commons-io:commons-io:2.19.0'
+
 }
 
 tasks.named('test') {

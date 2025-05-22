@@ -4,6 +4,10 @@ server:
   file:
     path : c:\\files\\uploads\\
 
+api:
+  weather:
+    key: f8065f32c396c20723660cf336e64915
+
 #database 설정
 spring :
   main:

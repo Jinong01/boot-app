@@ -2,6 +2,7 @@ package kor.it.academy.weather.service;
 
 import kor.it.academy.common.utils.APIConnUtils;
 import kor.it.academy.common.vo.APIResponse;
+import kor.it.academy.common.vo.CountryEnum;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,11 +55,13 @@ public class WeatherService {
         resultMap.put("temp", temp);
         resultMap.put("icon", String.format("https://openweathermap.org/img/wn/%s.png", icon));
         resultMap.put("condition", description);
+        resultMap.put("cityName", geoMap.get("cityName"));
+        resultMap.put("country", geoMap.get("country"));
 
         return resultMap;
     }
 
-    private Map<String , Object> getGeoData(String city) {
+    private Map<String , Object> getGeoData(String city) throws Exception{
         Map<String , Object> geoMap = new HashMap<>();
 
         Map<String , Object> dataParam = new HashMap<>();
@@ -71,8 +74,14 @@ public class WeatherService {
         if (response != null) {
             JSONObject jsonObj = new JSONArray(response.getData()).getJSONObject(0);
 
+            String cityName = jsonObj.getJSONObject("local_names").getString("ko");
+            String countryCode = jsonObj.getString("country");
+
+            //BigDecimal은 자바에서 실수를 가장 정확하게 표현하는 것, 위도 경도는 소수점 아래로 길게 나오기 때문에 정확한 BigDecimal로 받는다
             geoMap.put("lat", jsonObj.getBigDecimal("lat").doubleValue());
             geoMap.put("lon", jsonObj.getBigDecimal("lon").doubleValue());
+            geoMap.put("cityName", cityName);
+            geoMap.put("country", CountryEnum.getCountryName(countryCode));
         }
         return geoMap;
     }

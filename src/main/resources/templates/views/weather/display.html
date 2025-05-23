@@ -6,6 +6,7 @@
     <style>
         .weather-contents {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -57,11 +58,54 @@
     <div class="weather-contents">
         <div class="weather-card">
             <div class="weather-title">오늘의 날씨</div>
-            <div class="weather-icon"><img th:src="${icon}"></div>
-            <div class="temperature"><p th:text="|${temp} ℃|"></p></div>
-            <div class="weather-description"><p th:text="${condition}"></p></div>
-            <div class="location">서울, 대한민국</div>
+            <div class="weather-icon"><img th:src="${icon}" th:alt="${condition}" id="imgIcon"></div>
+            <div class="temperature"><p th:text="|${temp} ℃|" id="temp"></p></div>
+            <div class="weather-description"><p th:text="${condition}" id="description"></p></div>
+            <div class="location" id="location">[[|${cityName}, ${country}|]]</div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-8">
+                <input type="text" class="form-control" id="city" name="city" th:value="${cityName}">
+            </div>
+            <div class="col-4 text-end">
+                <button type="button" class="btn btn-primary" onclick="getTemp()">적용</button>
+            </div>
         </div>
     </div>
+    <script>
+
+        function getTemp() {
+            const city = $('#city');
+
+            if ($.trim(city.val()).length === 0) {
+                alert('검색할 도시를 입력하세요.')
+                city.focus()
+                return false
+            }
+
+            const cityName = city.val();
+
+            $.ajax({
+                url: `/api/wx/${cityName}`,
+                type: 'GET',
+                dataType: 'json'
+            }).done((response) => {
+                updateWeather(response);
+            }).fail((xhr, status, error) => {
+                alert(xhr.responseText)
+            })
+        }
+
+        function updateWeather(data){
+            $('#imgIcon').attr('src', data.icon)
+            $('#temp').text(`${data.temp}℃`)
+            $('#description').text(data.condition)
+            $('#location').empty()
+            const location = data.cityName + "," + data.country;
+            $('#location').append(location)
+
+        }
+
+    </script>
 </div>
 </html>

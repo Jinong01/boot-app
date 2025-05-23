@@ -47,6 +47,7 @@ public class SecurityConfig {
                                         .requestMatchers("/board/list").permitAll()
                                         .requestMatchers("/board/search").permitAll()
                                         .requestMatchers("/weather/**").permitAll()
+                                        .requestMatchers("/api/wx/**").permitAll()
                                         .requestMatchers("/user/join").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/api/user/").permitAll()
                                         .requestMatchers("/user/**").hasRole("ADMIN")
